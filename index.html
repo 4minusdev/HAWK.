@@ -3,44 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>H.A.W.K. | Holomap Air Warfare & Kinetics</title>
+<title>H.A.W.K | Holomap Air Warfare & Kinetics</title>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root {
-  --bg:       #0a0c10;
-  --panel:    #0e1118;
-  --border:   #1e2a38;
-  --accent:   #00c8ff;
-  --accent2:  #ff6a00;
-  --green:    #39ff8a;
-  --red:      #ff3a3a;
-  --yellow:   #ffd600;
-  --text:     #c8d8e8;
-  --dim:      #4a5a6a;
-  --blu:      #2979ff;
-  --opfor:    #ff3a3a;
-  --ally:     #39ff8a;
-  --neutral:  #ffd600;
-  --panel-w:  220px;
-  --right-w:  240px;
-  --top-h:    44px;
+  --bg: #0a0c10;
+  --panel: #0e1118;
+  --border: #1e2a38;
+  --accent: #00c8ff;
+  --text: #c8d8e8;
+  --dim: #4a5a6a;
+  --panel-w: 220px;
+  --top-h: 44px;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Rajdhani', sans-serif;
-  font-size: 13px;
   height: 100vh;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
-/* ── TOP BAR ── */
+/* TOP BAR */
 #topbar {
   height: var(--top-h);
   background: var(--panel);
@@ -48,199 +43,88 @@ body {
   display: flex;
   align-items: center;
   padding: 0 10px;
-  gap: 8px;
-  flex-shrink: 0;
-  z-index: 100;
 }
-#topbar .logo {
+
+.logo {
   font-family: 'Orbitron', sans-serif;
-  font-size: 14px;
   font-weight: 900;
   color: var(--accent);
   letter-spacing: 2px;
-  margin-right: 6px;
-  white-space: nowrap;
-}
-#op-name {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  width: 160px;
-  padding: 2px 4px;
-  outline: none;
-}
-#op-name:focus { border-bottom-color: var(--accent); }
-
-.tb-sep { width: 1px; height: 24px; background: var(--border); margin: 0 4px; flex-shrink:0; }
-
-.tb-btn {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 3px 10px;
-  cursor: pointer;
-  letter-spacing: 1px;
-  transition: all .15s;
-  white-space: nowrap;
-}
-.tb-btn:hover { border-color: var(--accent); color: var(--accent); }
-.tb-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
-.tb-btn.danger:hover { border-color: var(--red); color: var(--red); }
-
-#phase-strip {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex: 1;
-  overflow-x: auto;
-}
-.phase-btn {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--dim);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  padding: 2px 10px;
-  cursor: pointer;
-  transition: all .15s;
-  white-space: nowrap;
-}
-.phase-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,200,255,.08); }
-.phase-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-#room-badge {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  padding: 3px 10px;
-  border: 1px solid var(--border);
-  color: var(--dim);
-  background: transparent;
-  white-space: nowrap;
-}
-#room-badge.connected { border-color: var(--green); color: var(--green); }
-#room-badge.hosting { border-color: var(--accent); color: var(--accent); }
-
-#status-counts {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  color: var(--dim);
-  white-space: nowrap;
+  font-size: 14px;
 }
 
-/* ── MAIN LAYOUT ── */
+/* MAIN LAYOUT */
 #main {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-/* ── LEFT PANEL ── */
+/* LEFT PANEL */
 #left-panel {
   width: var(--panel-w);
   background: var(--panel);
   border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  flex-shrink: 0;
+  padding: 10px;
 }
-#left-panel::-webkit-scrollbar { width: 4px; }
-#left-panel::-webkit-scrollbar-track { background: var(--panel); }
-#left-panel::-webkit-scrollbar-thumb { background: var(--border); }
 
-.panel-section {
-  border-bottom: 1px solid var(--border);
-  padding: 8px;
-}
 .panel-section h3 {
-  font-family: 'Share Tech Mono', monospace;
   font-size: 10px;
-  letter-spacing: 2px;
   color: var(--dim);
-  margin-bottom: 6px;
-  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
 }
 
-/* Tools */
-#tool-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3px;
-}
-.tool-btn {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 5px 4px;
-  cursor: pointer;
-  transition: all .15s;
-  text-align: center;
-  letter-spacing: .5px;
-}
-.tool-btn:hover { border-color: var(--accent); color: var(--accent); }
-.tool-btn.active { background: rgba(0,200,255,.12); border-color: var(--accent); color: var(--accent); }
-
-/* Quick deploy */
-#qdeploy {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.qd-row {
-  display: flex;
-  gap: 3px;
-}
-.qd-btn {
+/* CENTER AREA */
+#center {
   flex: 1;
-  padding: 4px 2px;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  border: 1px solid var(--border);
-  background: transparent;
-  cursor: pointer;
-  transition: all .15s;
-  letter-spacing: .5px;
-  text-align: center;
-}
-.qd-btn.blu  { color: var(--blu); }
-.qd-btn.red  { color: var(--opfor); }
-.qd-btn.grn  { color: var(--ally); }
-.qd-btn.yel  { color: var(--yellow); }
-.qd-btn:hover { opacity: .75; border-color: currentColor; }
-
-/* Unit palette */
-.unit-palette { display: flex; flex-direction: column; gap: 2px; }
-.unit-type-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 6px;
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .15s;
+  justify-content: center;
+  text-align: center;
 }
-.unit-type-btn:hover { border-color: var(--accent); color: var(--accent); }
-.unit-type-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,200,255,.08); }
-.unit-icon { font-size: 14px; line-height: 1; }
 
-/* Arrow style */
-.arrow-style-row { display: flex; gap: 3px; }
+.card {
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 6px;
+}
+
 </style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="logo">H.A.W.K</div>
+</div>
+
+<!-- MAIN AREA -->
+<div id="main">
+
+  <!-- LEFT PANEL -->
+  <div id="left-panel">
+    <div class="panel-section">
+      <h3>SYSTEM STATUS</h3>
+      <p>Online</p>
+    </div>
+
+    <div class="panel-section">
+      <h3>TOOLS</h3>
+      <p>Ready</p>
+    </div>
+  </div>
+
+  <!-- CENTER AREA -->
+  <div id="center">
+    <div class="card">
+      <h1>H.A.W.K SYSTEM ONLINE</h1>
+      <p>Holomap Air Warfare & Kinetics</p>
+    </div>
+  </div>
+
+</div>
+
 </body>
 </html>
