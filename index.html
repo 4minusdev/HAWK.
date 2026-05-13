@@ -1,130 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>H.A.W.K | Holomap Air Warfare & Kinetics</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>H.A.W.K | Flight Planner</title>
+
+<!-- Map library -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap');
-
-:root {
-  --bg: #0a0c10;
-  --panel: #0e1118;
-  --border: #1e2a38;
-  --accent: #00c8ff;
-  --text: #c8d8e8;
-  --dim: #4a5a6a;
-  --panel-w: 220px;
-  --top-h: 44px;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
 }
 
-/* TOP BAR */
-#topbar {
-  height: var(--top-h);
-  background: var(--panel);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-}
-
-.logo {
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 900;
-  color: var(--accent);
-  letter-spacing: 2px;
-  font-size: 14px;
-}
-
-/* MAIN LAYOUT */
-#main {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
-/* LEFT PANEL */
-#left-panel {
-  width: var(--panel-w);
-  background: var(--panel);
-  border-right: 1px solid var(--border);
+/* Sidebar */
+#panel {
+  width: 300px;
+  background: #0e1118;
+  color: #c8d8e8;
   padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
-.panel-section h3 {
-  font-size: 10px;
-  color: var(--dim);
-  letter-spacing: 2px;
-  margin-bottom: 8px;
+h2 {
+  margin-top: 0;
+  color: #00c8ff;
 }
 
-/* CENTER AREA */
-#center {
+button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  background: #1e2a38;
+  color: white;
+  border: 1px solid #00c8ff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00c8ff;
+  color: black;
+}
+
+/* Map */
+#map {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
 }
-
-.card {
-  border: 1px solid var(--border);
-  padding: 20px;
-  border-radius: 6px;
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- TOP BAR -->
-<div id="topbar">
-  <div class="logo">H.A.W.K</div>
+<!-- LEFT PANEL -->
+<div id="panel">
+  <h2>H.A.W.K FLIGHT PLANNER</h2>
+
+  <p><b>Instructions:</b></p>
+  <p>Click on the map to add waypoints.</p>
+
+  <button onclick="clearRoute()">Clear Route</button>
+
+  <h3>Route Data</h3>
+  <div id="info">No route yet</div>
 </div>
 
-<!-- MAIN AREA -->
-<div id="main">
+<!-- MAP -->
+<div id="map"></div>
 
-  <!-- LEFT PANEL -->
-  <div id="left-panel">
-    <div class="panel-section">
-      <h3>SYSTEM STATUS</h3>
-      <p>Online</p>
-    </div>
+<!-- Leaflet -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <div class="panel-section">
-      <h3>TOOLS</h3>
-      <p>Ready</p>
-    </div>
-  </div>
+<script>
+let map = L.map('map').setView([52.2, 5.3], 7); // Netherlands view
 
-  <!-- CENTER AREA -->
-  <div id="center">
-    <div class="card">
-      <h1>H.A.W.K SYSTEM ONLINE</h1>
-      <p>Holomap Air Warfare & Kinetics</p>
-    </div>
-  </div>
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap'
+}).addTo(map);
 
-</div>
+let waypoints = [];
+let line = null;
+
+function updateRoute() {
+  if (line) map.removeLayer(line);
+
+  if (waypoints.length < 2) {
+    document.getElementById("info").innerText = "Need at least 2 points";
+    return;
+  }
+
+  line = L.polyline(waypoints, {color: 'red'}).addTo(map);
+
+  let distance = 0;
+  for (let i = 1; i < waypoints.length; i++) {
+    distance += map.distance(waypoints[i-1], waypoints[i]);
+  }
+
+  document.getElementById("info").innerHTML =
+    "Waypoints: " + waypoints.length + "<br>" +
+    "Distance: " + (distance / 1000).toFixed(2) + " km";
+}
+
+map.on('click', function(e) {
+  waypoints.push([e.latlng.lat, e.latlng.lng]);
+
+  L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+  updateRoute();
+});
+
+function clearRoute() {
+  waypoints = [];
+  map.eachLayer(layer => {
+    if (layer instanceof L.Marker || layer instanceof L.Polyline) {
+      map.removeLayer(layer);
+    }
+  });
+
+  document.getElementById("info").innerText = "No route yet";
+}
+</script>
 
 </body>
 </html>
